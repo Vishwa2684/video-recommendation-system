@@ -48,6 +48,9 @@ def feed():
     try:
         # Get username from query parameters
         username = request.args.get('username')
+        category_id = request.args.get('category_id')
+        mood = request.args.get('mood')
+
         if not username:
             return {'message': 'Username is required'}, 400
 
