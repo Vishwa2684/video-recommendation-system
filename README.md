@@ -45,3 +45,12 @@ PREPARED POST CATEGORIES
     - my input is: username, category_id and mood as query parameters
 - i found out that emotions attribute in post summary is hetrogeneous. so im going to struggle with it
 
+## Approach
+- First i added all users and posts json data into a mongoDB database
+- To build content based filtering system I have picked liked_posts and viewed_posts then joined both of those dataframes then I got the category of each post my mapping through every post id and querying it in Database to check it's category.
+- Then the final CSV DataFrame is saved in the working directory.
+- Then i built a simple neural network to which takes user id as input view as 0 because user haven't viewed it yet and like as 1 because user may like the following post.
+- The neural network gives the output but there's one flaw in it. It gives same output for one user id input and it doesn't handle users who have not liked or seen anything in app.
+
+- I got to fix this issue.
+
