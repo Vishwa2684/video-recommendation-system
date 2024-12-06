@@ -36,38 +36,6 @@ print('connected to mongodb and loaded model')
 
 ## FUNCTION TO VALIDATE THE MODEL
 
-def validate_model(model_path, validation_data, user_encoder, post_encoder):
-    # Load the saved model
-    model = tf.keras.models.load_model(model_path, custom_objects={
-        'custom_rmse': lambda y_true, y_pred: tf.sqrt(tf.reduce_mean(tf.square(y_true - y_pred)))
-    })
-
-    # Prepare validation data
-    X_user = validation_data['user_id_encoded'].values
-    X_post = validation_data['post_id_encoded'].values
-    X_interaction = validation_data[['liked', 'viewed']].values
-    y = tf.keras.utils.to_categorical(validation_data['post_id_encoded'])
-
-    # Evaluate the model
-    loss, accuracy = model.evaluate(
-        [X_user, X_post, X_interaction], 
-        y, 
-        verbose=1
-    )
-
-    print(f"Validation Loss: {loss}")
-    print(f"Validation Accuracy: {accuracy}")
-
-    # Optional: Predict top-k recommendations
-    predictions = model.predict([X_user, X_post, X_interaction])
-    top_k_recommendations = np.argsort(predictions, axis=1)[:, -10:]
-    
-    # Convert back to original post IDs
-    original_post_ids = post_encoder.inverse_transform(top_k_recommendations[0])
-    print("Top 10 Recommended Post IDs:", original_post_ids)
-
-
-
 
 app = Flask(__name__)
 
@@ -102,25 +70,28 @@ def feed():
             # Encode user_id
             user_id_encoded = user_encoder.transform([user_id])
 
-            # Prepare input tensor for prediction
-            input_tensor = np.array([[user_id_encoded[0], liked, viewed]])
-            predicted_post_ids_encoded = model.predict(input_tensor)
+            # Prepare input tensors for the model (separate inputs for each required feature)
+            user_input = np.array([user_id_encoded[0]])  # Shape (1,)
+            post_input = np.zeros((1,))  # Placeholder for post ID input (unused for prediction here)
+            interaction_input = np.array([[liked, viewed]])  # Shape (1, 2)
 
-            # Decode the predicted post_id
-            predicted_post_ids = post_encoder.inverse_transform(predicted_post_ids_encoded.argmax(axis=1))
-            predicted_post_id = int(predicted_post_ids[0])  # Convert numpy.int64 to int
+            # Make predictions
+            predicted_post_scores = model.predict([user_input, post_input, interaction_input])
 
-            print("Predicted ID is:", predicted_post_id)
-
-            # Fetch the corresponding post from the database
-            response_post = db.posts.find_one({'id': predicted_post_id})
+            # Get top 10 recommended post IDs
+            top_k_indices = np.argsort(predicted_post_scores, axis=1)[:, -10:]  # Top 10 indices
+            predicted_post_ids = post_encoder.inverse_transform(top_k_indices[0])  # Decode indices
+            print(predicted_post_ids)
+            predicted_post_ids_list = predicted_post_ids.tolist()
+            # Fetch the corresponding posts from the database
+            # Fetch posts from MongoDB
+            recommended_posts = list(db.posts.find({'id': {'$in': predicted_post_ids_list}}))
 
             # Ensure response is JSON serializable
-            if response_post:
-                response_post['_id'] = str(response_post['_id'])  # Convert ObjectId to string if needed
-                return jsonify(response_post), 200
-            else:
-                return {'message': 'No post found for the predicted ID'}, 404
+            for post in recommended_posts:
+                post['_id'] = str(post['_id'])
+
+            return jsonify(recommended_posts), 200
         else:
             # If username not found in the database, return a random selection of 10 posts
             random_posts = list(db.posts.aggregate([{"$sample": {"size": 10}}]))  # Random 10 posts
