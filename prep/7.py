@@ -16,22 +16,20 @@ def extract_post_features(json_file_path):
         title = post.get('title')
         video_link = post.get('video_link')
         
-        # Extract emotions from post_summary
-        emotions = post.get('post_summary', {}).get('emotions', {})
-        print(type(emotions))
+
         # Create a row for each emotion
-        for emotion in emotions:
-            post_features.append({
+        
+        post_features.append({
                 'id': post_id,
                 'category_id': category_id,
                 'title': title,
                 'video_link': video_link,
-                'emotion': emotion
-            })
+        })
     
     # Create a DataFrame
     df = pd.DataFrame(post_features)
-    
+    with open('../data/posts_features.json','w') as f:
+        json.dump(post_features,f,indent=4)
     return df
 
 # Usage example
