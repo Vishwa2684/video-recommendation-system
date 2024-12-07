@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model  # type: ignore
 import tensorflow as tf
 from sklearn.preprocessing import LabelEncoder
-
+import random
 import pandas as pd
 from pymongo import MongoClient
 import numpy as np
@@ -71,7 +71,8 @@ def feed():
 
             # Prepare input tensors for the model (separate inputs for each required feature)
             user_input = np.array([user_id_encoded[0]])  # Shape (1,)
-            post_input = np.zeros((1,))  # Placeholder for post ID input (unused for prediction here)
+            num = random.randint(0,50)
+            post_input = np.array([num])  # Placeholder for post ID input (unused for prediction here)
             interaction_input = np.array([[liked, viewed]])  # Shape (1, 2)
 
             # Make predictions
