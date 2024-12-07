@@ -1,181 +1,130 @@
-# Recommendation System for filtering videos
---------------------------------------------------------------------
+# Video Recommendation System
+
+## Overview
+A sophisticated recommendation system designed to provide personalized video suggestions using machine learning techniques.
+
+## Technology Stack
+- **Machine Learning:** TensorFlow
+- **Backend:** Flask
+- **Database:** PyMongo
+- **Data Processing:** 
+  - Pandas
+  - NumPy
+  - SciKit Learn
+
+## Key Requirements
+1. **Personalization**
+   - Generate recommendations based on individual user history and engagement patterns
+   - Provide tailored content suggestions
+
+2. **Cold Start Problem Handling**
+   - Implement mechanisms to recommend videos for new users
+   - Utilize user mood and initial interactions as recommendation signals
+
 ## Dataset APIs
 
-**Get All Viewed Posts:**
-
-```
-https://api.socialverseapp.com/posts/view?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-```
-
-**Get All Liked Posts:**
-
-```
-https://api.socialverseapp.com/posts/like?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-```
-
-
-**Get All Inspired posts:**
-
-```
-https://api.socialverseapp.com/posts/inspire?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-```
-
-**Get All Rated posts:**
-
-```
-https://api.socialverseapp.com/posts/rating?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-```
-
-**Get All Posts (Header required*):**
-
-```
-https://api.socialverseapp.com/posts/summary/get?page=1&page_size=1000
-```
-
-**Get All Users (Header required*):**
-
-```
-https://api.socialverseapp.com/users/get_all?page=1&page_size=1000
-```
-
-Authorization
-For autherization pass Flic-Token as header in the API request:
-
-**Header:**
-
+### Authentication
+**Header Authentication**
 ```
 "Flic-Token": "flic_6e2d8d25dc29a4ddd382c2383a903cf4a688d1a117f6eb43b35a1e7fadbb84b8"
 ```
 
---------------------------------------------------------------------
-
-## Stack
-- Tensorflow
-- Flask
-- PyMongo
-- Pandas
-- NumPy
-- SciKit Learn
-
-## Requirements
-- *Personalization*: The recommendation algorithm should make personalized suggestions based on user history and engagement patterns.
-- *Cold Start Problem Handling*: Include a mechanism to recommend videos for new users without prior interaction history (hint: you can use user mood here).
---------------------------------------------------------------------
-
-## Findings
-- The neural network-based recommendation system relies heavily on user preferences and engagement patterns.
-
-- The heterogeneous nature of emotions in post summaries (emotions in both list and object form) poses a challenge for cleanly extracting emotional data. This requires further preprocessing and normalization to ensure that emotions are captured consistently.
-
-
-
-## Approach
-- The data preparation steps involved:
-    - To load the data. Create a folder named data. Then:
-    ```
-    cd prep
-    python 1.py
-    python 2.py
-    python 3.py
-    python 4.py
-    python 5.py
-    python 6.py
-    ```
-    This saved the data in ['data/'](https://github.com/Vishwa2684/video-recommendation-system/tree/main/data)
-    - Saved Posts and Users data in my MongoDB localhost database named the database as expressverse.
-    - Prepared the data for collaborative filtering in [collaborative.py](https://github.com/Vishwa2684/video-recommendation-system/blob/main/model/collaborative.py) by joining liked_posts.csv and inspired_posts.csv by outer join and saved it in that directory.
-
-- Then encode user id and post id
-
-- In our problem post_id, user_id are categorical feature
-
-- My model predicts the posts by considering user_id as an input along with view and like value of the post
-
-- Then i built a simple neural network for collaborative filtering implementing matrix factorization
+### Available Endpoints
+| Endpoint | Description | URL |
+|----------|-------------|-----|
+| Viewed Posts | Retrieve viewed posts | `https://api.socialverseapp.com/posts/view?page=1&page_size=1000&resonance_algorithm=...` |
+| Liked Posts | Retrieve liked posts | `https://api.socialverseapp.com/posts/like?page=1&page_size=1000&resonance_algorithm=...` |
+| Inspired Posts | Retrieve inspired posts | `https://api.socialverseapp.com/posts/inspire?page=1&page_size=1000&resonance_algorithm=...` |
+| Rated Posts | Retrieve rated posts | `https://api.socialverseapp.com/posts/rating?page=1&page_size=1000&resonance_algorithm=...` |
+| All Posts | Retrieve all posts (header required) | `https://api.socialverseapp.com/posts/summary/get?page=1&page_size=1000` |
+| All Users | Retrieve all users (header required) | `https://api.socialverseapp.com/users/get_all?page=1&page_size=1000` |
 
 ## Neural Network Architecture
 
-The recommendation system utilizes a Matrix Factorization-based Collaborative Filtering model built using TensorFlow to predict user engagement with posts. Here's how the architecture works:
+### Model Components
+1. **Input Layers**
+   - User Input (User ID)
+   - Post Input (Post ID)
+   - Interaction Input (Like/View status)
 
-1. Input layers:
-    The model uses three inputs:
+2. **Embedding Layers**
+   - User Embedding: Dense vector representation of users
+   - Post Embedding: Dense vector representation of posts
 
-    - User Input: The user ID, which indicates which user is interacting with the posts.
-    - Post Input: The post ID, representing the post with which the user is interacting.
-    - Interaction Input: This input contains two values that represent the - interaction types:
-    - Whether the user liked the post (represented as 1).
-    - Whether the user has viewed the post (represented as 0).
+3. **Feature Processing**
+   - Combine user embeddings, post embeddings, and interaction features
+   - Pass through hidden layers for non-linear pattern learning
 
-2. Embedding Layers:
-    To represent users and posts in a more efficient way, both the user ID and post ID are passed through embedding layers. These embeddings transform the sparse categorical data into dense vector representations of users and posts.
-    
-    - User Embedding: This layer learns an embedding vector for each user.
-    
-    - Post Embedding: This layer learns an embedding vector for each post.
+4. **Neural Network Structure**
+   - First Hidden Layer: 128 neurons with ReLU activation
+     - Dropout (50%) for regularization
+   - Second Hidden Layer: 64 neurons with ReLU activation
+     - Dropout (30%) to prevent overfitting
+   - Output Layer: Softmax activation for interaction score prediction
 
-3. Combined Features:
-    After embedding and flattening, the model combines the user embeddings, post embeddings, and interaction features (viewed/liked information) into a single vector. This combined vector is passed through the subsequent layers for prediction.
+5. **Loss Function**
+   Root Mean Squared Error (RMSE):
+   ### $RMSE(y, \hat{y}) = \sqrt{\frac{\sum_{i=0}^{N - 1} (y_i - \hat{y}_i)^2}{N}}$
 
-4. Hidden Layers:
-    To learn non-linear patterns between the combined features, the model has two fully connected hidden layers:
+## Data Preparation
 
-    - The first hidden layer has 128 neurons with ReLU activation, followed by Dropout (50%) for regularization.
-    - The second hidden layer has 64 neurons with ReLU activation and Dropout (30%) to prevent overfitting.
+### Initial Setup
+1. Create a `data` folder
+2. Run preparation scripts:
+   ```bash
+   cd prep
+   python 1.py
+   python 2.py
+   python 3.py
+   python 4.py
+   python 5.py
+   python 6.py
+   ```
 
-5. Output Layer:
-    The final layer of the model is a Dense Layer with a softmax activation function. This layer outputs the predicted interaction scores for each post, which indicates the likelihood that the user will interact with the post.
+### Data Processing Steps
+- Save Posts and Users data in MongoDB (database: expressverse)
+- Prepare collaborative filtering data by joining liked_posts.csv and inspired_posts.csv
+- Encode user and post IDs
+- Implement categorical feature handling
 
-6. Custom Loss Function (RMSE)
-    The model uses Root Mean Squared Error (RMSE) as the loss function, which is calculated using the following formula:
+## Model Training and Validation
 
-    ### $RMSE(y, \hat{y}) = \sqrt{\frac{\sum_{i=0}^{N - 1} (y_i - \hat{y}_i)^2}{N}}$
-
-
-- The code of Matrix Factorization is present in [model/collaborative.py](https://github.com/Vishwa2684/video-recommendation-system/blob/main/model/collaborative.py)
-
-- To train the model
-```
+### Training the Model
+```bash
 cd model
 python collaborative.py
 ```
 
-- This saves model in [api](https://github.com/Vishwa2684/video-recommendation-system/blob/main/api) folder.
-
-- If you want to validate the performance of model run the following python script:
-```
+### Validating Model Performance
+```bash
 python collaborative_val.py
 ```
 
-## API architecture
-- To use API:
-```
+## API Usage
+
+### Running the API
+```bash
 cd api
 python api.py
 ```
-- Loading Operations in *api.py*:
-    Before the Flask app can handle incoming requests, several essential resources are loaded and initialized. These include the model, dataset, and the necessary encoders. Here's an overview of each loading operation:
-        1. Loading the Model:
-            Purpose: Loads the pre-trained recommendation model from the specified `.h5` file `(simple_content_based.h5)`.
 
-            Details:
+### API Initialization Process
+1. **Model Loading**
+   - Load pre-trained recommendation model (simple_content_based.h5)
+   - Initialize custom RMSE loss function
 
-            Model Type: This is a TensorFlow-based model that uses embeddings and user interaction data to predict post recommendations.
-            Custom Loss Function: The model uses a custom loss function for RMSE (Root Mean Squared Error) which is defined during the loading process. This loss function is used to evaluate and train the model based on the difference between predicted and actual values.
-        2. Loading the Dataset:
-            Purpose: Loads the dataset for content-based recommendation from the CSV file located at `../model/dataset_for_contbased.csv`.
+2. **Dataset Preparation**
+   - Load dataset from `../model/dataset_for_contbased.csv`
+   - Preprocess and encode user/post IDs
 
-            Details:
+3. **Encoder Preparation**
+   - Apply LabelEncoder to user and post IDs
+   - Create encoded columns for model input
 
-            Dataset Content: The dataset contains user interactions with posts (such as likes, views, etc.), which are essential for generating personalized recommendations.
-            Data Preprocessing: After loading the dataset, user and post IDs are encoded to numerical values using `LabelEncoder` to prepare them for the model input.
-        3. Preparing User and Post Encoders:
-            Purpose: Initializes and applies encoders `(LabelEncoder)` to the user and post IDs in the dataset.
+## Key Findings
+- Neural network recommendation system relies heavily on user preferences
+- Challenges exist in processing heterogeneous emotional data in post summaries
+- Requires advanced preprocessing and normalization techniques
 
-            Details:
-
-            User Encoder: The LabelEncoder is used to convert categorical user_id values into numerical values that can be used by the model.
-            Post Encoder: Similarly, the post_id values are encoded into numerical values, allowing the model to handle these as input features.
-            Result: New columns (user_id_encoded and post_id_encoded) are added to the dataframe, which will be used for generating predictions.
-
-- Then make call to the respective routes.
+## Contribution
+Feel free to contribute, report issues, or suggest improvements!
