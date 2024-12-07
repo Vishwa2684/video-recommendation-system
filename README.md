@@ -1,36 +1,52 @@
 # Recommendation System for filtering videos
 --------------------------------------------------------------------
 ## APIs
-Get All Viewed Posts:
 
-`https://api.socialverseapp.com/posts/view?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if`
+**Get All Viewed Posts:**
 
-Get All Liked Posts:
+```
+https://api.socialverseapp.com/posts/view?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
+```
 
-```https://api.socialverseapp.com/posts/like?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if```
+**Get All Liked Posts:**
 
-Get All Inspired posts:
+```
+https://api.socialverseapp.com/posts/like?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
+```
 
-```https://api.socialverseapp.com/posts/inspire?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if```
 
-Get All Rated posts:
+**Get All Inspired posts:**
 
-```https://api.socialverseapp.com/posts/rating?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if```
+```
+https://api.socialverseapp.com/posts/inspire?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
+```
 
-Get All Posts (Header required*):
+**Get All Rated posts:**
 
-```https://api.socialverseapp.com/posts/summary/get?page=1&page_size=1000```
+```
+https://api.socialverseapp.com/posts/rating?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
+```
 
-Get All Users (Header required*):
+**Get All Posts (Header required*):**
 
-```https://api.socialverseapp.com/users/get_all?page=1&page_size=1000```
+```
+https://api.socialverseapp.com/posts/summary/get?page=1&page_size=1000
+```
+
+**Get All Users (Header required*):**
+
+```
+https://api.socialverseapp.com/users/get_all?page=1&page_size=1000
+```
 
 Authorization
 For autherization pass Flic-Token as header in the API request:
 
-Header:
+**Header:**
 
-```"Flic-Token": "flic_6e2d8d25dc29a4ddd382c2383a903cf4a688d1a117f6eb43b35a1e7fadbb84b8"```
+```
+"Flic-Token": "flic_6e2d8d25dc29a4ddd382c2383a903cf4a688d1a117f6eb43b35a1e7fadbb84b8"
+```
 
 --------------------------------------------------------------------
 
