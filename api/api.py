@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model #type:ignore
 import tensorflow as tf
 from sklearn.preprocessing import LabelEncoder
 
