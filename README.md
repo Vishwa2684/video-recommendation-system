@@ -52,10 +52,11 @@ For autherization pass Flic-Token as header in the API request:
 
 ## Stack
 - Tensorflow
+- Flask
 - PyMongo
 - Pandas
 - NumPy
-- SciKit Learn for Label encoders
+- SciKit Learn
 
 ## Requirements
 - *Personalization*: The recommendation algorithm should make personalized suggestions based on user history and engagement patterns.
@@ -131,7 +132,7 @@ The recommendation system utilizes a Matrix Factorization-based Collaborative Fi
     ### $RMSE(y, \hat{y}) = \sqrt{\frac{\sum_{i=0}^{N - 1} (y_i - \hat{y}_i)^2}{N}}$
 
 
-The code of Matrix Factorization is present in [model/collaborative.py](https://github.com/Vishwa2684/video-recommendation-system/blob/main/model/collaborative.py)
+- The code of Matrix Factorization is present in [model/collaborative.py](https://github.com/Vishwa2684/video-recommendation-system/blob/main/model/collaborative.py)
 
 - To train the model
 ```
@@ -145,3 +146,5 @@ python collaborative.py
 ```
 python collaborative_val.py
 ```
+
+## API architecture
