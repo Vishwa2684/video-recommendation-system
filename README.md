@@ -138,3 +138,10 @@ The code of Matrix Factorization is present in [model/collaborative.py](https://
 cd model
 python collaborative.py
 ```
+
+- This saves model in [api](https://github.com/Vishwa2684/video-recommendation-system/blob/main/api) folder.
+
+- If you want to validate the performance of model run the following python script:
+```
+python collaborative_val.py
+```
