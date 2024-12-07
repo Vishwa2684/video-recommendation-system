@@ -4,21 +4,27 @@
 Get All Viewed Posts:
 
 `https://api.socialverseapp.com/posts/view?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if`
+
 Get All Liked Posts:
 
 `https://api.socialverseapp.com/posts/like?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if`
+
 Get All Inspired posts:
 
 `https://api.socialverseapp.com/posts/inspire?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if`
+
 Get All Rated posts:
 
 `https://api.socialverseapp.com/posts/rating?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if`
+
 Get All Posts (Header required*):
 
 `https://api.socialverseapp.com/posts/summary/get?page=1&page_size=1000`
+
 Get All Users (Header required*):
 
 `https://api.socialverseapp.com/users/get_all?page=1&page_size=1000`
+
 Authorization
 For autherization pass Flic-Token as header in the API request:
 
