@@ -121,6 +121,51 @@ python api.py
    - Apply LabelEncoder to user and post IDs
    - Create encoded columns for model input
 
+4. **Post Embeddings Preparation**
+   ```python
+   post_embeddings = np.array(df['post_id_encoded'].tolist())
+   ```
+   - Create NumPy array of post embeddings
+   - Currently uses encoded post IDs as placeholders
+   - Can be replaced with pre-trained embeddings if available
+
+5. **MongoDB Connection Setup**
+   ```python
+   uri = "mongodb://localhost:27017/"
+   client = MongoClient(uri)
+   db = client['expressverse']
+   ```
+   - Connects to local MongoDB instance
+   - Selects 'expressverse' database
+   - Accesses users and posts collections
+
+### API Endpoints
+
+#### Recommendation Feed Endpoints
+| Endpoint | Description | URL |
+|----------|-------------|-----|
+| Basic Feed | Get recommendations for a user | `http://localhost:8080/feed?username=your_username` |
+| Category-Specific Feed | Get recommendations for a specific category | `http://localhost:8080/feed?username=your_username&category_id=category_id_user_want_to_see` |
+| Mood-Based Feed | Get recommendations based on user mood | `http://localhost:8080/feed?username=your_username&category_id=category_id_user_want_to_see&mood=user_current_mood` |
+
+#### Endpoint Parameters
+- `username`: Required parameter identifying the user
+- `category_id`: Optional parameter to filter recommendations by content category
+- `mood`: Optional parameter to personalize recommendations based on user's current emotional state
+
+### Key Initialization Steps
+1. Load recommendation model
+2. Prepare dataset with encoded IDs
+3. Set up MongoDB connection
+4. Prepare post embeddings
+5. Initialize recommendation generation logic
+
+The API is designed to provide personalized content recommendations by:
+- Analyzing user interaction history
+- Considering user mood and preferences
+- Utilizing machine learning embeddings
+- Filtering by content categories
+
 ## Key Findings
 - Neural network recommendation system relies heavily on user preferences
 - Challenges exist in processing heterogeneous emotional data in post summaries
