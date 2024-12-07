@@ -62,7 +62,7 @@ For autherization pass Flic-Token as header in the API request:
 - *Cold Start Problem Handling*: Include a mechanism to recommend videos for new users without prior interaction history (hint: you can use user mood here).
 --------------------------------------------------------------------
 
-## findings
+## Findings
 - The neural network-based recommendation system relies heavily on user preferences and engagement patterns.
 
 - The heterogeneous nature of emotions in post summaries (emotions in both list and object form) poses a challenge for cleanly extracting emotional data. This requires further preprocessing and normalization to ensure that emotions are captured consistently.
@@ -72,8 +72,8 @@ For autherization pass Flic-Token as header in the API request:
 ## Approach
 - The data preparation steps involved:
     - Loading the data from the endpoints provided in the README
-    - Convert all dataframes into CSV and saved it in *'./data'*
+    - Convert all dataframes into CSV and saved it in ['./data'](https://github.com/Vishwa2684/video-recommendation-system/tree/main/data)
     - Saved Posts and Users data in my MongoDB localhost database named the database as expressverse.
-    - Prepared the data for collaborative filtering in *collaborative.py* by joining liked_posts.csv and inspired_posts.csv by outer join and saved it in that directory.
+    - Prepared the data for collaborative filtering in [collaborative.py](https://github.com/Vishwa2684/video-recommendation-system/blob/main/model/collaborative.py) by joining liked_posts.csv and inspired_posts.csv by outer join and saved it in that directory.
 
 
