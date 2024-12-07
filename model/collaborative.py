@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import layers, models, regularizers
+from tensorflow.keras import layers, models, regularizers #type:ignore
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from pymongo import MongoClient
@@ -18,7 +18,7 @@ def prepare_data(liked_posts, viewed_posts, categories, db):
 
     merged['category'] = merged['post_id'].map(lambda post_id: 
         categories[db['posts'].find_one({'id': post_id})['category']['id']])
-
+    merged.to_csv('./dataset_for_collaborative.csv')
     return merged
 
 def create_matrix_factorization_model(num_users, num_posts, embedding_dim=50):
