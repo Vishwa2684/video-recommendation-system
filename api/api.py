@@ -6,19 +6,18 @@ from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 from pymongo import MongoClient
 import numpy as np
-import random
-
 
 # Setting up connection to the database
 uri = "mongodb://localhost:27017/"
 client = MongoClient(uri)
 db = client['expressverse']
 
+#############################################################################
 # Loading dataset and model
 df = pd.read_csv('../model/dataset_for_contbased.csv')
-model = load_model('./simple_content_based.h5',custom_objects={
-        'custom_rmse': lambda y_true, y_pred: tf.sqrt(tf.reduce_mean(tf.square(y_true - y_pred)))
-    })
+model = load_model('./simple_content_based.h5', custom_objects={
+    'custom_rmse': lambda y_true, y_pred: tf.sqrt(tf.reduce_mean(tf.square(y_true - y_pred)))
+})
 
 # Preparing encoders for users and posts
 user_encoder = LabelEncoder()
@@ -29,13 +28,8 @@ df['post_id_encoded'] = post_encoder.fit_transform(df['post_id'])
 
 # Storing post embeddings (ensure the model generates embeddings)
 post_embeddings = np.array(df['post_id_encoded'].tolist())  # Replace with actual embeddings if available
-
-# Debug line
+#############################################################################
 print('connected to mongodb and loaded model')
-
-
-## FUNCTION TO VALIDATE THE MODEL
-
 
 app = Flask(__name__)
 
@@ -43,12 +37,14 @@ app = Flask(__name__)
 def greet():
     return {"message": "Hi there"}
 
+#############################################################################
+
 @app.get('/feed')
 def feed():
     try:
-        # Get username from query parameters
+        # Get parameters from query
         username = request.args.get('username')
-        category_id = request.args.get('category_id')
+        category_id = int(request.args.get('category_id')) if request.args.get('category_id') else None
         mood = request.args.get('mood')
 
         if not username:
@@ -56,7 +52,7 @@ def feed():
 
         # Try to fetch user_id from the database
         user = db.users.find_one({'username': username})
-        
+
         if user:
             user_id = user['id']
             liked = 1
@@ -84,15 +80,37 @@ def feed():
             # Get top 10 recommended post IDs
             top_k_indices = np.argsort(predicted_post_scores, axis=1)[:, -10:]  # Top 10 indices
             predicted_post_ids = post_encoder.inverse_transform(top_k_indices[0])  # Decode indices
-            print(predicted_post_ids)
             predicted_post_ids_list = predicted_post_ids.tolist()
-            # Fetch the corresponding posts from the database
-            # Fetch posts from MongoDB
-            recommended_posts = list(db.posts.find({'id': {'$in': predicted_post_ids_list}}))
+
+            # Base query to search for posts
+            query = {"id": {"$in": predicted_post_ids_list}}
+
+            # Apply filters based on the category_id and mood
+            if category_id and mood:
+                query["$and"] = [
+                    {"category.id": category_id},
+                    {"$or": [{"post_summary.emotions.mood": mood}, {"post_summary.emotions.emotions_conveyed": mood}]}
+                ]
+            elif category_id:
+                query["category.id"] = category_id
+            elif mood:
+                query["$or"] = [
+                    {"post_summary.emotions.mood": mood},
+                    {"post_summary.emotions.emotions_conveyed": mood}
+                ]
+
+            # Fetch filtered posts based on the query
+            recommended_posts = list(db.posts.find(query))
+
+            # Fill the gap with random posts if less than 10 posts are found
+            num_recommended = len(recommended_posts)
+            if num_recommended < 10:
+                random_posts = list(db.posts.aggregate([{"$sample": {"size": 10 - num_recommended}}]))
+                recommended_posts.extend(random_posts)
 
             # Ensure response is JSON serializable
             for post in recommended_posts:
-                post['_id'] = str(post['_id'])
+                post['_id'] = str(post['_id'])  # Convert ObjectId to string if needed
 
             return jsonify(recommended_posts), 200
         else:
@@ -106,6 +124,7 @@ def feed():
         print(f'{e.args[0]} at line number: {e.__traceback__.tb_lineno}')
         return {'message': 'An error occurred while processing your request'}, 500
 
+#############################################################################
 
 if __name__ == '__main__':
     app.run(host='localhost', debug=True, port=8080)
