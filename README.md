@@ -148,3 +148,10 @@ python collaborative_val.py
 ```
 
 ## API architecture
+- To use API:
+```
+cd api
+python api.py
+```
+
+- Then make call to the respective routes.
