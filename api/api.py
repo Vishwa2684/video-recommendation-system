@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from tensorflow.keras.models import load_model #type:ignore
+from tensorflow.keras.models import load_model  # type: ignore
 import tensorflow as tf
 from sklearn.preprocessing import LabelEncoder
 
@@ -8,7 +8,7 @@ from pymongo import MongoClient
 import numpy as np
 
 # Setting up connection to the database (You can also use your mongo cloud URI)
-uri = "mongodb://localhost:27017/" 
+uri = "mongodb://localhost:27017/"
 client = MongoClient(uri)
 db = client['expressverse']
 
@@ -81,7 +81,7 @@ def feed():
             top_k_indices = np.argsort(predicted_post_scores, axis=1)[:, -10:]  # Top 10 indices
             predicted_post_ids = post_encoder.inverse_transform(top_k_indices[0])  # Decode indices
             predicted_post_ids_list = predicted_post_ids.tolist()
-            print(predicted_post_ids_list)
+            print(predicted_post_ids)
             # Base query to search for posts
             query = {"id": {"$in": predicted_post_ids_list}}
 
@@ -105,9 +105,10 @@ def feed():
             # Now, check if the number of recommended posts is less than 10
             num_recommended = len(recommended_posts)
             if num_recommended < 10:
-                # Fetch additional random posts if needed to fill the gap
-                random_posts = list(db.posts.aggregate([{"$sample": {"size": 10 - num_recommended}}]))
-                recommended_posts.extend(random_posts)
+                # Fetch additional posts from the same category to fill the gap
+                additional_posts_query = {"category.id": category_id, "_id": {"$nin": [post['_id'] for post in recommended_posts]}}
+                additional_posts = list(db.posts.find(additional_posts_query).limit(10 - num_recommended))
+                recommended_posts.extend(additional_posts)
 
             # Ensure response is JSON serializable
             for post in recommended_posts:
