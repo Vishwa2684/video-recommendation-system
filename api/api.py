@@ -14,7 +14,7 @@ db = client['expressverse']
 
 #############################################################################
 # Loading dataset and model
-df = pd.read_csv('../model/dataset_for_contbased.csv')
+df = pd.read_csv('../model/dataset_for_colaborative.csv')
 model = load_model('./simple_content_based.h5', custom_objects={
     'custom_rmse': lambda y_true, y_pred: tf.sqrt(tf.reduce_mean(tf.square(y_true - y_pred)))
 })
