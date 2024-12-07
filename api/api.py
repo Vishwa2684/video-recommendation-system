@@ -7,8 +7,8 @@ import pandas as pd
 from pymongo import MongoClient
 import numpy as np
 
-# Setting up connection to the database
-uri = "mongodb://localhost:27017/"
+# Setting up connection to the database (You can also use your mongo cloud URI)
+uri = "mongodb://localhost:27017/" 
 client = MongoClient(uri)
 db = client['expressverse']
 
