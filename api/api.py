@@ -14,7 +14,7 @@ db = client['expressverse']
 
 #############################################################################
 # Loading dataset and model
-df = pd.read_csv('../model/dataset_for_colaborative.csv')
+df = pd.read_csv('../model/dataset_for_collaborative.csv')
 model = load_model('./simple_content_based.h5', custom_objects={
     'custom_rmse': lambda y_true, y_pred: tf.sqrt(tf.reduce_mean(tf.square(y_true - y_pred)))
 })
@@ -81,11 +81,11 @@ def feed():
             top_k_indices = np.argsort(predicted_post_scores, axis=1)[:, -10:]  # Top 10 indices
             predicted_post_ids = post_encoder.inverse_transform(top_k_indices[0])  # Decode indices
             predicted_post_ids_list = predicted_post_ids.tolist()
-
+            print(predicted_post_ids_list)
             # Base query to search for posts
             query = {"id": {"$in": predicted_post_ids_list}}
 
-            # Apply filters based on the category_id and mood
+            # Apply filters based on the category_id and mood (first filtering)
             if category_id and mood:
                 query["$and"] = [
                     {"category.id": category_id},
@@ -102,9 +102,10 @@ def feed():
             # Fetch filtered posts based on the query
             recommended_posts = list(db.posts.find(query))
 
-            # Fill the gap with random posts if less than 10 posts are found
+            # Now, check if the number of recommended posts is less than 10
             num_recommended = len(recommended_posts)
             if num_recommended < 10:
+                # Fetch additional random posts if needed to fill the gap
                 random_posts = list(db.posts.aggregate([{"$sample": {"size": 10 - num_recommended}}]))
                 recommended_posts.extend(random_posts)
 
