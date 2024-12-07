@@ -156,18 +156,26 @@ python api.py
 - Loading Operations in *api.py*:
     Before the Flask app can handle incoming requests, several essential resources are loaded and initialized. These include the model, dataset, and the necessary encoders. Here's an overview of each loading operation:
         1. Loading the Model:
-            Purpose: Loads the pre-trained recommendation model from the specified *.h5* file *(simple_content_based.h5)*.
+            Purpose: Loads the pre-trained recommendation model from the specified `.h5` file `(simple_content_based.h5)`.
 
             Details:
 
             Model Type: This is a TensorFlow-based model that uses embeddings and user interaction data to predict post recommendations.
             Custom Loss Function: The model uses a custom loss function for RMSE (Root Mean Squared Error) which is defined during the loading process. This loss function is used to evaluate and train the model based on the difference between predicted and actual values.
         2. Loading the Dataset:
-            Purpose: Loads the dataset for content-based recommendation from the CSV file located at *../model/dataset_for_contbased.csv*.
+            Purpose: Loads the dataset for content-based recommendation from the CSV file located at `../model/dataset_for_contbased.csv`.
 
             Details:
 
             Dataset Content: The dataset contains user interactions with posts (such as likes, views, etc.), which are essential for generating personalized recommendations.
-            Data Preprocessing: After loading the dataset, user and post IDs are encoded to numerical values using LabelEncoder to prepare them for the model input.
+            Data Preprocessing: After loading the dataset, user and post IDs are encoded to numerical values using `LabelEncoder` to prepare them for the model input.
+        3. Preparing User and Post Encoders:
+            Purpose: Initializes and applies encoders `(LabelEncoder)` to the user and post IDs in the dataset.
+
+            Details:
+
+            User Encoder: The LabelEncoder is used to convert categorical user_id values into numerical values that can be used by the model.
+            Post Encoder: Similarly, the post_id values are encoded into numerical values, allowing the model to handle these as input features.
+            Result: New columns (user_id_encoded and post_id_encoded) are added to the dataframe, which will be used for generating predictions.
 
 - Then make call to the respective routes.
