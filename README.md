@@ -71,8 +71,17 @@ For autherization pass Flic-Token as header in the API request:
 
 ## Approach
 - The data preparation steps involved:
-    - Loading the data from the endpoints provided in the README
-    - Convert all dataframes into CSV and saved it in ['./data'](https://github.com/Vishwa2684/video-recommendation-system/tree/main/data)
+    - To load the data. Create a folder named data. Then:
+    ```
+    cd prep
+    python 1.py
+    python 2.py
+    python 3.py
+    python 4.py
+    python 5.py
+    python 6.py
+    ```
+    This saved the data in ['data/'](https://github.com/Vishwa2684/video-recommendation-system/tree/main/data)
     - Saved Posts and Users data in my MongoDB localhost database named the database as expressverse.
     - Prepared the data for collaborative filtering in [collaborative.py](https://github.com/Vishwa2684/video-recommendation-system/blob/main/model/collaborative.py) by joining liked_posts.csv and inspired_posts.csv by outer join and saved it in that directory.
 
@@ -123,3 +132,9 @@ The recommendation system utilizes a Matrix Factorization-based Collaborative Fi
 
 
 The code of Matrix Factorization is present in [model/collaborative.py](https://github.com/Vishwa2684/video-recommendation-system/blob/main/model/collaborative.py)
+
+- To train the model
+```
+cd model
+python collaborative.py
+```
