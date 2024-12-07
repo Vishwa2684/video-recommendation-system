@@ -1,4 +1,8 @@
 # Video Recommendation System
+## References
+- [How YouTube Predicts Your Next Video | Recommender Systems](https://youtube.com/watch?v=n3RKsY2H-NE)
+- [Recommendation System : Content Based Recommendation and Collaborative Filtering Explained in Hindi](https://www.youtube.com/watch?v=jhFFOmvPne4)
+- [Building a Recommendation System in Python](https://www.youtube.com/watch?v=G4MBc40rQ2k&t=451s)
 
 ## Overview
 A sophisticated recommendation system designed to provide personalized video suggestions using machine learning techniques.
