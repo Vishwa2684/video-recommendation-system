@@ -119,7 +119,7 @@ The recommendation system utilizes a Matrix Factorization-based Collaborative Fi
 6. Custom Loss Function (RMSE)
     The model uses Root Mean Squared Error (RMSE) as the loss function, which is calculated using the following formula:
 
-$RMSE(y, \hat{y}) = \sqrt{\frac{\sum_{i=0}^{N - 1} (y_i - \hat{y}_i)^2}{N}}$
+    ### $RMSE(y, \hat{y}) = \sqrt{\frac{\sum_{i=0}^{N - 1} (y_i - \hat{y}_i)^2}{N}}$
 
 
 The code of Matrix Factorization is present in [model/collaborative.py](https://github.com/Vishwa2684/video-recommendation-system/blob/main/model/collaborative.py)
